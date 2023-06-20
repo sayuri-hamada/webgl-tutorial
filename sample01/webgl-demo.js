@@ -1,6 +1,6 @@
 import { initBuffers } from './init-buffers.js'
 
-let squareRotation = 0.0;
+let cubeRotation = 0.0;
 
 
 main();
@@ -139,7 +139,7 @@ function loadShader(gl, type, source) {
 }
 
 function drawScene(gl, programInfo, buffers, deltaTime) {
-  gl.clearColor = (0.0, 0.0, 0.0, 1.0); // 黒でクリア、完全に不透明
+  gl.clearColor(0.0, 0.0, 0.0, 1.0); // 黒でクリア、完全に不透明
   gl.clearDepth(1.0); //全てをクリア
   gl.enable(gl.DEPTH_TEST); //深度テストを有効化
   gl.depthFunc(gl.LEQUAL); //奥にあるものは隠れるようにする
@@ -175,15 +175,26 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
 
   mat4.rotate(modelViewMatrix,
     modelViewMatrix,
-    squareRotation,
+    cubeRotation,
     [0, 0, 1]
   );
+
+  mat4.rotate(modelViewMatrix,  // destination matrix
+  modelViewMatrix,  // matrix to rotate
+  cubeRotation * .7,// amount to rotate in radians
+    [0, 1, 0]);       // axis to rotate around (Y)
+
+  mat4.rotate(modelViewMatrix,  // destination matrix
+  modelViewMatrix,  // matrix to rotate
+  cubeRotation * .3,// amount to rotate in radians
+  [1, 0, 0]);       // axis to rotate around (X)
+
 
   // WebGL にどのように座標バッファーから vertexPosition 属性に
   // 座標を引き出すか伝える
 
   {
-    const numComponents = 2;
+    const numComponents = 3;
     const type = gl.FLOAT;
     const normalize = false;
     const stride = 0;
@@ -220,6 +231,8 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
         programInfo.attribLocations.vertexColor);
   }
 
+  // 頂点のインデックスにどのインデックスを使用するかを WebGL に指示します
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
   // setPositionAttribute(gl, buffers, programInfo)
 
@@ -239,12 +252,13 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
   );
 
   {
+    const vertexCount = 36;
+    const type = gl.UNSIGNED_SHORT;
     const offset = 0;
-    const vertexCount = 4;
-    gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
+    gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
   }
 
   // 次の描画のためにローテーションを更新します
-  squareRotation += deltaTime;
+  cubeRotation += deltaTime;
 
 }
