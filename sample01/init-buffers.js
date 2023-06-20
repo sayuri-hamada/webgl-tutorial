@@ -1,9 +1,11 @@
 function initBuffers(gl) {
-  const positionBuffer = initPositionBuffer(gl);
+  const buffer = initPositionBuffer(gl);
 
   return {
-    position: positionBuffer,
+    position: buffer.position,
+    color: buffer.color,
   };
+
 }
 
 function initPositionBuffer(gl) {
@@ -22,7 +24,20 @@ function initPositionBuffer(gl) {
   // バッファーを埋める。
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-  return positionBuffer;
+  var colors = [
+    1.0,  1.0,  1.0,  1.0,    // 白
+    1.0,  0.0,  0.0,  1.0,    // 赤
+    0.0,  1.0,  0.0,  1.0,    // 緑
+    0.0,  0.0,  1.0,  1.0     // 青
+  ];
+  const colorBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+
+  return {
+    position: positionBuffer,
+    color: colorBuffer,
+  };
 }
 
 export { initBuffers };

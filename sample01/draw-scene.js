@@ -35,7 +35,47 @@ function drawScene(gl, programInfo, buffers) {
 
   // WebGL にどのように座標バッファーから vertexPosition 属性に
   // 座標を引き出すか伝える
-  setPositionAttribute(gl, buffers, programInfo)
+
+  {
+    const numComponents = 2;
+    const type = gl.FLOAT;
+    const normalize = false;
+    const stride = 0;
+    const offset = 0;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+    gl.vertexAttribPointer(
+        programInfo.attribLocations.vertexPosition,
+        numComponents,
+        type,
+        normalize,
+        stride,
+        offset);
+    gl.enableVertexAttribArray(
+        programInfo.attribLocations.vertexPosition);
+  }
+
+  // Tell WebGL how to pull out the colors from the color buffer
+  // into the vertexColor attribute.
+  {
+    const numComponents = 4;
+    const type = gl.FLOAT;
+    const normalize = false;
+    const stride = 0;
+    const offset = 0;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+    gl.vertexAttribPointer(
+        programInfo.attribLocations.vertexColor,
+        numComponents,
+        type,
+        normalize,
+        stride,
+        offset);
+    gl.enableVertexAttribArray(
+        programInfo.attribLocations.vertexColor);
+  }
+
+
+  // setPositionAttribute(gl, buffers, programInfo)
 
   // WebGLに、描写するのに我々のプログラムを用いるように伝える
   gl.useProgram(programInfo.program);
@@ -63,22 +103,44 @@ function drawScene(gl, programInfo, buffers) {
 // WebGL に、位置バッファーから vertexPosition 属性に
 // 位置を引き出す方法を指示する。
 function setPositionAttribute(gl, buffers, programInfo) {
-  const numComponents = 2;
-  const type = gl.FLOAT;
-  const nomalize = false;
-  const stride = 0;
+  {
+    const numComponents = 2;
+    const type = gl.FLOAT;
+    const nomalize = false;
+    const stride = 0;
 
-  const offset = 0;
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-  gl.vertexAttribPointer(
-    programInfo.attribLocations.vertexPosition,
-    numComponents,
-    type,
-    nomalize,
-    stride,
-    offset
-  );
-  gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+    const offset = 0;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+    gl.vertexAttribPointer(
+      programInfo.attribLocations.vertexPosition,
+      numComponents,
+      type,
+      nomalize,
+      stride,
+      offset
+    );
+    gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+  }
+
+  {
+    const numComponents = 4;
+    const type = gl.FLOAT;
+    const nomalize = false;
+    const stride = 0;
+
+    const offset = 0;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+    gl.vertexAttribPointer(
+      programInfo.attribLocations.vertexColor,
+      numComponents,
+      type,
+      nomalize,
+      stride,
+      offset
+    );
+    gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+  }
+
 
 }
 
